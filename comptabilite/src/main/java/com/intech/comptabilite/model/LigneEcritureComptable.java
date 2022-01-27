@@ -40,8 +40,12 @@ public class LigneEcritureComptable {
     public LigneEcritureComptable() {
     }
 
-    public LigneEcritureComptable(CompteComptable pCompteComptable, String pLibelle,
-                                  BigDecimal pDebit, BigDecimal pCredit) {
+    public LigneEcritureComptable(
+		CompteComptable pCompteComptable, 
+		String pLibelle,
+		BigDecimal pDebit, 
+		BigDecimal pCredit
+	) {
         compteComptable = pCompteComptable;
         libelle = pLibelle;
         debit = pDebit;
