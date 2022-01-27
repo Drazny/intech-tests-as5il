@@ -83,8 +83,7 @@ public class EcritureComptableService {
 	 * @return boolean
 	 */
 	public boolean isEquilibree(EcritureComptable ecriture) {
-		boolean vRetour = this.getTotalDebit(ecriture).equals(getTotalCredit(ecriture));
-		return vRetour;
+		return this.getTotalDebit(ecriture).compareTo(getTotalCredit(ecriture)) == 0 ? true : false; 
 	}
 
 }
