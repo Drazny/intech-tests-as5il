@@ -5,11 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import com.intech.comptabilite.model.CompteComptable;
 import com.intech.comptabilite.repositories.CompteComptableRepository;
@@ -19,7 +20,7 @@ public class CompteComptableServiceTest {
 
 	@Autowired
 	private CompteComptableService ccService;
-	@MockBean
+	@SpyBean
 	private CompteComptableRepository ccRepository;
 	
 	@Test
@@ -46,5 +47,11 @@ public class CompteComptableServiceTest {
 		
 		List<CompteComptable> res = ccService.getListCompteComptable();
 		assertEquals( list.size(), res.size() );
+	}
+	
+	@Test
+	public void getListCompteComptableIntegrationTest() {
+		List<CompteComptable> res = ccService.getListCompteComptable();
+		Assertions.assertTrue( res.size() > 0 );
 	}
 }
