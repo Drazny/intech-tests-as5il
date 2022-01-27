@@ -21,7 +21,6 @@ import com.intech.comptabilite.model.CompteComptable;
 import com.intech.comptabilite.model.EcritureComptable;
 import com.intech.comptabilite.model.JournalComptable;
 import com.intech.comptabilite.model.LigneEcritureComptable;
-import com.intech.comptabilite.model.SequenceEcritureComptable;
 import com.intech.comptabilite.service.entityservice.CompteComptableService;
 import com.intech.comptabilite.service.entityservice.EcritureComptableService;
 import com.intech.comptabilite.service.entityservice.JournalComptableService;
@@ -94,8 +93,7 @@ public class ComptabiliteManagerImpl implements ComptabiliteManager {
         this.checkEcritureComptableUnit(pEcritureComptable);
         this.checkEcritureComptableContext(pEcritureComptable);
     }
-
-
+    
     /**
      * {@inheritDoc}
      */
@@ -139,6 +137,19 @@ public class ComptabiliteManagerImpl implements ComptabiliteManager {
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        JournalComptable journal = pEcritureComptable.getJournal();
+        String ref = pEcritureComptable.getReference();
+        
+        if( !ref.split("-")[0].equals(journal.getCode().toString() ) ) {
+        	throw new FunctionalException( "Le code journal de la référence ne correspond pas au journal de l'écriture." );
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime( pEcritureComptable.getDate() );
+        
+        if( !ref.split("-")[1].split("/")[0].equals(String.valueOf( cal.get( Calendar.YEAR ) ) ) ) {
+        	throw new FunctionalException( "La date de la référence ne correspond pas à la date de l'écriture." );
+        }
     }
 
 
