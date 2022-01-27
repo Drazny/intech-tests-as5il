@@ -1,5 +1,7 @@
 package com.intech.comptabilite.service.entityservice;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -11,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.intech.comptabilite.model.CompteComptable;
 import com.intech.comptabilite.model.EcritureComptable;
 import com.intech.comptabilite.model.LigneEcritureComptable;
+import com.intech.comptabilite.service.exceptions.FunctionalException;
+import com.intech.comptabilite.service.exceptions.NotFoundException;
 
 @SpringBootTest
 public class EcritureComptableServiceTest {
@@ -50,4 +54,46 @@ public class EcritureComptableServiceTest {
         Assertions.assertFalse(ecritureComptableService.isEquilibree(vEcriture));
     }
 
+    @Test
+    public void getDebitTest() {
+        EcritureComptable vEcriture;
+        vEcriture = new EcritureComptable();
+
+        vEcriture.setLibelle( "Non équilibrée" );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 1, "10", null ) );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 1, "20", "1" ) );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 2, null, "30" ) );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 2, "1", "2" ) );
+        
+        assertEquals( new BigDecimal( 31 ), ecritureComptableService.getTotalDebit( vEcriture ) );
+    }
+    
+    @Test
+    public void getCreditTest() {
+        EcritureComptable vEcriture;
+        vEcriture = new EcritureComptable();
+
+        vEcriture.setLibelle( "Non équilibrée" );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 1, "10", null ) );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 1, "20", "1" ) );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 2, null, "30" ) );
+        vEcriture.getListLigneEcriture().add( this.createLigne( 2, "1", "2" ) );
+        
+        assertEquals( new BigDecimal( 33 ), ecritureComptableService.getTotalCredit( vEcriture ) );
+    }
+    
+    @Test
+    public void getEcritureComptableByNullRefShouldThrow() throws NotFoundException {
+        Assertions.assertThrows(NotFoundException.class,
+        		() -> {
+        			ecritureComptableService.getEcritureComptableByRef( null );
+        		}
+        );    	
+    }
+    
+    @Test
+    public void getEcritureComptableByRefTest() throws NotFoundException {
+        EcritureComptable ec = ecritureComptableService.getEcritureComptableByRef( "AC-2016/00001" );
+        Assertions.assertNotNull( ec );
+    }
 }
